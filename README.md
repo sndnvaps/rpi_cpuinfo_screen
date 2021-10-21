@@ -52,13 +52,13 @@ make
 ```
 After a little while you should have a program called 
 
-test_bcm8544
+cpuinfo
 
 ## How to use
 
 Now you can enter
 ```
-test_bcm8544 hello world
+cpuinfo
 ```
 on the command line
 
