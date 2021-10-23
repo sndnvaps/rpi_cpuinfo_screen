@@ -56,13 +56,13 @@ Lesser General Public License for more details.
 #define NETWORK_FILE "/etc/network/interfaces"
 
 // pin setup
-int _din = 12;
-int _clk = 11;
-int _dc = 13;
-int _rst = 16;
-int _ce = 15;
+int _din = 1;
+int _clk = 0;
+int _dc = 2;
+int _rst = 4;
+int _ce = 3;
 //gnd pin = 6
-int _vcc = 1;
+//int _vcc = 1;
 int _bl = 7;
 
 // lcd contrast
@@ -94,7 +94,7 @@ int main(void)
   }
 
   // init and clear lcd
-  LCDInit(_clk, _din, _dc, _ce, _rst, _vcc, _bl, contrast);
+  LCDInit(_clk, _din, _dc, _ce, _rst,/* _vcc , */ _bl, contrast);
   //LCDLight();
   LCDclear();
 

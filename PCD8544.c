@@ -52,7 +52,7 @@ Lesser General Public License for more details.
 
 // LCD port variables
 static uint8_t cursor_x, cursor_y, textsize, textcolor;
-static int8_t _din, _sclk, _dc, _rst, _cs, _vcc, _bl;
+static int8_t _din, _sclk, _dc, _rst, _cs,/* _vcc,*/ _bl;
 
 // font bitmap
 static unsigned char  font[] = {
@@ -391,14 +391,14 @@ static void updateBoundingBox(uint8_t xmin, uint8_t ymin, uint8_t xmax, uint8_t 
 #endif
 }
 
-void LCDInit(uint8_t SCLK, uint8_t DIN, uint8_t DC, uint8_t CS, uint8_t RST, uint8_t VCC, uint8_t BL, uint8_t contrast)
+void LCDInit(uint8_t SCLK, uint8_t DIN, uint8_t DC, uint8_t CS, uint8_t RST,/* uint8_t VCC, */ uint8_t BL, uint8_t contrast)
 {
 	_din = DIN;
 	_sclk = SCLK;
 	_dc = DC;
 	_rst = RST;
 	_cs = CS;
-	_vcc = VCC;
+       //	_vcc = VCC;
 	_bl = BL;
 	
 	cursor_x = cursor_y = 0;
@@ -411,11 +411,11 @@ void LCDInit(uint8_t SCLK, uint8_t DIN, uint8_t DC, uint8_t CS, uint8_t RST, uin
 	pinMode(_dc, OUTPUT);
 	pinMode(_rst, OUTPUT);
 	pinMode(_cs, OUTPUT);
-	pinMode(_vcc, OUTPUT);
+	//pinMode(_vcc, OUTPUT);
 	pinMode(_bl, OUTPUT);
 	
 	// power on
-	digitalWrite(_vcc, HIGH);
+	//digitalWrite(_vcc, HIGH);
 	// light on
 	digitalWrite(_bl, HIGH);
 
