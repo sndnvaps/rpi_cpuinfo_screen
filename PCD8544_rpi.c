@@ -51,6 +51,9 @@ Lesser General Public License for more details.
 #include <netinet/in.h>
 #include <net/if.h>
 
+//sndnvaps modify
+#include <unistd.h>
+
 #define TEMP_PATH "/sys/class/thermal/thermal_zone0/temp"
 #define MAX_SIZE 32
 #define NETWORK_FILE "/etc/network/interfaces"
@@ -67,7 +70,7 @@ int _bl = 7;
 
 // lcd contrast
 //may be need modify to fit your screen!  normal: 30- 90 ,default is:45 !!!maybe modify this value!
-int contrast = 30;
+int contrast = 45;
 
 time_t timep;
 struct tm *p;
@@ -127,9 +130,13 @@ int main(void)
           }
 
           // uptime
-          char uptimeInfo[15];
-          unsigned long uptime = sys_info.uptime / 60;
-          sprintf(uptimeInfo, "Up %ld min", uptime);
+          char uptimeInfo[30];
+          //unsigned long uptime = sys_info.uptime / 60;
+          unsigned long uptimeDays = sys_info.uptime /86400;
+          unsigned long uptimeHours = (sys_info.uptime /3600)-(uptimeDays *24);
+          unsigned long uptimeMins = (sys_info.uptime /60)-(uptimeDays *1440)-(uptimeHours *60);
+          sprintf(uptimeInfo,"Up %ldD%ldH%ldM",uptimeDays,uptimeHours,uptimeMins);
+          //sprintf(uptimeInfo, "Up %ld min", uptime);
 
           // cpu info
           char cpuInfo[10];
@@ -137,12 +144,12 @@ int main(void)
           sprintf(cpuInfo, "CPU %ld%%\r", avgCpuLoad);
 
           // ram info
-          char ramInfo[10];
+          char ramInfo[20];
           unsigned long totalRam = sys_info.totalram / 1024 / 1024;
           unsigned long freeRam = sys_info.freeram /1024 /1024;
           unsigned long usedRam = totalRam - freeRam;
           unsigned long ram_load = (usedRam * 100) / totalRam;
-          sprintf(ramInfo, "RAM %.3dM %.2d", usedRam,ram_load);
+          sprintf(ramInfo, "RAM %.3ldM %.2ld", usedRam,ram_load);
 
           // temp info
           char tempInfo[10];
