@@ -54,6 +54,12 @@ After a little while you should have a program called
 
 cpuinfo
 
+install cpuinfo as service,and make it it run at boot
+```
+make install
+service cpuinfo start
+```
+
 ## How to use
 
 Now you can enter
