@@ -17,19 +17,17 @@ PROG="cpuinfo"
 PROG_PATH="/usr/local/rpi_cpuinfo_screen"
 
 
-PIDFILE="/var/run/$PROG.pid"
-
 DELAY=5
 
 start() {
-	if [ -e $PIDFILE ]; then
+	cpuinfopid=$(ps -e|grep $PROG|awk '{print $1}')
+	if [ ! -n "$cpuinfopid" ]; then
 		echo "Error! $PROG is currently running!" 1>&2
 		exit 1
 	else
 		cd $PROG_PATH
 		./$PROG  &
 		echo "$PROG started, waiting $DELAY seconds..."
-		touch $PIDFILE
 	fi
 }
 
@@ -40,7 +38,6 @@ stop() {
 	else
 		echo "Stop $PROG... pid: $cpuinfopid" 1>&2
 		kill -9 $cpuinfopid
-		rm -rf $PIDFILE
 	fi
 }
 
@@ -72,6 +69,6 @@ case "$1" in
 		start
 	;;
 	*)
-		echo "Usage: $0 {start|stop|status|reload}" 1>&2
+		echo "Usage: $0 {start|stop|status|reload|restart|force-reload}" 1>&2
 		exit 1
 esac
