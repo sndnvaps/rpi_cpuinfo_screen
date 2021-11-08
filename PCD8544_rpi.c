@@ -58,6 +58,9 @@ Lesser General Public License for more details.
 #define MAX_SIZE 32
 #define NETWORK_FILE "/etc/network/interfaces"
 
+// screen refresh cycle time in milliseconds -> 1000ms = 1s
+const int SCREEN_REFRESH_CYCLE = 4000;
+
 // pin setup
 int _din = 1;
 int _clk = 0;
@@ -79,7 +82,7 @@ char *wday[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 char get_temp(void);
 char* getip(char* ip_buf);
 char* get_temp2(void);
-int min,hour,sec,mday;
+int min,hour,sec,mday,month;
 char week;
 struct tm *localtime(const time_t *timep);
 int main(void)
@@ -104,7 +107,7 @@ int main(void)
   // show logo
   LCDshowLogo();
 
-  delay(2000);
+  delay(SCREEN_REFRESH_CYCLE);
 
   for (;;)
   {
@@ -115,12 +118,13 @@ int main(void)
           char timeInfo[16];
           time(&timep);
           p=localtime(&timep);
+          month = p->tm_mon + 1;
           mday=p->tm_mday;
           min=p->tm_min;
           week=p->tm_wday;
           hour=p->tm_hour;
           sec=p->tm_sec;
-          sprintf(timeInfo, "%d %d:%d:%d",mday,hour,min,sec);
+          sprintf(timeInfo, "%d/%d %d:%d:%d",month,mday,hour,min,sec);
 
           // get system usage / info
           struct sysinfo sys_info;
@@ -144,12 +148,12 @@ int main(void)
           sprintf(cpuInfo, "CPU %ld%%\r", avgCpuLoad);
 
           // ram info
-          char ramInfo[20];
+          char ramInfo[22];
           unsigned long totalRam = sys_info.totalram / 1024 / 1024;
           unsigned long freeRam = sys_info.freeram /1024 /1024;
           unsigned long usedRam = totalRam - freeRam;
           unsigned long ram_load = (usedRam * 100) / totalRam;
-          sprintf(ramInfo, "RAM %.3ldM %.2ld", usedRam,ram_load);
+          sprintf(ramInfo, "RAM %.3ldM %.2ld%s", usedRam,ram_load,"%");
 
           // temp info
           char tempInfo[10];
@@ -162,15 +166,15 @@ int main(void)
           //printf("IP: %s", getip(ipInfo));
 
           // build screen
-          LCDdrawstring(0, 0, uptimeInfo);
-          LCDdrawstring(0, 8, cpuInfo);
-          LCDdrawstring(0, 16, ramInfo);
-          LCDdrawstring(0, 24, tempInfo);
-          LCDdrawstring(0, 32, timeInfo);
-          LCDdrawstring(0, 40, ipInfo);
+          LCDdrawstring(0, 0, ipInfo);
+          LCDdrawline(0,10,83,10,BLACK);
+          LCDdrawstring(0, 13, uptimeInfo);
+          LCDdrawstring(0, 22, timeInfo);
+          LCDdrawstring(0, 31, tempInfo);
+          LCDdrawstring(0, 40, ramInfo);
           LCDdisplay();
 
-          delay(1000);
+          delay(SCREEN_REFRESH_CYCLE);
   }
   return 0;
 }
